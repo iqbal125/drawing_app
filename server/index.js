@@ -1,5 +1,4 @@
-import express from "express"
-const app = express()
+import app from "./src/app.js"
 const port = 5000
 
 app.get("/", (_, res) => {
