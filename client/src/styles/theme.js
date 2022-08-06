@@ -1,12 +1,42 @@
 export const breakpoints = {
-  small: "640px",
-  medium: "768px",
-  large: "1024px",
-  extraLarge: "1280px",
-}
+  small: '640px',
+  medium: '768px',
+  large: '1024px',
+  extraLarge: '1280px'
+};
 
 export const theme = {
-  primary: "#42389D",
-  primaryHover: "#5145CD",
-  backgroundLanding: "#F8FAFC",
-}
+  primary: '#42389D',
+  primaryHover: '#5145CD',
+  backgroundLanding: '#F8FAFC',
+  coolGray50: '#F8FAFC',
+  coolGray100: '#F1F5F9',
+  coolGray200: '#E2E8F0',
+  coolGray300: '#CFD8E3',
+  coolGray400: '#97A6BA',
+  coolGray500: '#64748B',
+  coolGray700: '#364152',
+  coolGray900: '1A202E',
+  gray50: '#F9FAFB',
+  gray100: '#F4F5F7',
+  gray200: '#E2E8F0',
+  gray300: '#D2D6DC',
+  gray400: '#97A6BA',
+  gray500: '#6B7280',
+  gray600: '#4B5563',
+  gray700: '#374151',
+  gray800: '#2D3748',
+  gray900: '#161E2E',
+  green100: '#DEf7EC',
+  green500: '#0E9F6E',
+  green800: '#03543F',
+  indigo100: '#E0E7FF',
+  indigo200: '#CDDBFE',
+  indigo300: '#B4C6FC',
+  indigo400: '#8DA2FB',
+  indigo500: '#6875F5',
+  indigo600: '#5850EC',
+  indigo700: '#5145CD',
+  indigo800: '#42389D',
+  indigo900: '#42389D'
+};
