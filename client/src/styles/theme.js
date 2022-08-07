@@ -38,5 +38,6 @@ export const theme = {
   indigo600: '#5850EC',
   indigo700: '#5145CD',
   indigo800: '#42389D',
-  indigo900: '#42389D'
+  indigo900: '#42389D',
+  white: '#FFFFFF'
 };
