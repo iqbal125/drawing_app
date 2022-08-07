@@ -32,7 +32,6 @@ export const SignUp = async (req, res) => {
   let result = await saveUsertoDB(email, username, hashedPass)
   let user_id = result.id
 
-  //maybe send back all
   res.send({token: setToken(user_id)})
 }
 
@@ -57,6 +56,7 @@ export const Login = async (req, res) => {
   }
 
   let user_id = user.id
+  let username = user.username
 
-  res.send({token: setToken(user_id)})
+  res.send({token: setToken({user_id, username})})
 }

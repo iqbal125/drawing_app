@@ -1,8 +1,12 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState, useContext } from 'react';
 import { theme } from '../styles/theme';
 import { Mode } from '../types/mode';
 
+import AuthContext from '../utils/authContext';
+
 const useCanvas = () => {
+  const { authState } = useContext(AuthContext);
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
@@ -11,13 +15,14 @@ const useCanvas = () => {
   const [lineColor, setLineColor] = useState<string>(theme.primary);
   const [lineWidth, setLineWidth] = useState<number>(5);
   const [mode, setMode] = useState<Mode>(Mode.Paint);
+  const [isPrivate, setPrivate] = useState<boolean>(false);
+
+  const [timeStarted, setTimeStarted] = useState<number | null>(null);
 
   const initialWindowSize = useRef({
     width: window.innerWidth,
     height: window.innerHeight
   });
-
-  const timeStarted = useRef<string | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -49,8 +54,8 @@ const useCanvas = () => {
     contextRef.current?.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
     setIsDrawing(true);
 
-    if (!timeStarted.current) {
-      timeStarted.current = new Date().toISOString();
+    if (!timeStarted) {
+      setTimeStarted(Date.now());
     }
   };
 
@@ -78,6 +83,34 @@ const useCanvas = () => {
         initialWindowSize.current.height
       );
     }
+    setTimeStarted(null);
+  };
+
+  const saveDrawing = () => {
+    if (!timeStarted) {
+      return;
+    }
+
+    const canvas = canvasRef.current;
+
+    const dataURL = canvas?.toDataURL();
+    const timeEnded = new Date().getTime();
+
+    const timeToComplete = timeEnded - timeStarted;
+
+    const date = new Date(timeToComplete * 1000);
+    const minutesToComplete = date.getMinutes();
+    const author = authState.user.username;
+    const user_id = authState.user.user_id;
+    const token = authState.user.token;
+
+    console.log(authState.user.username);
+    let data = {
+      dataURL,
+      timeToComplete,
+      timeStarted: timeStarted
+      //user data
+    };
   };
 
   return {
@@ -93,7 +126,10 @@ const useCanvas = () => {
     draw,
     canvasRef,
     initialWindowSize,
-    timeStarted
+    timeStarted: timeStarted,
+    isPrivate,
+    setPrivate,
+    saveDrawing
   };
 };
 

@@ -21,7 +21,10 @@ const Create: FunctionComponent = () => {
     draw,
     canvasRef,
     initialWindowSize,
-    timeStarted
+    timeStarted,
+    isPrivate,
+    setPrivate,
+    saveDrawing
   } = useCanvas();
 
   return (
@@ -34,7 +37,11 @@ const Create: FunctionComponent = () => {
         mode={mode}
         setMode={setMode}
         clearCanvas={clearCanvas}
-        timeStarted={timeStarted?.current ? new Date(timeStarted?.current).toLocaleString() : null}
+        timeStarted={timeStarted}
+        isPrivate={isPrivate}
+        setPrivate={setPrivate}
+        onSave={saveDrawing}
+        hasDrawing={!!timeStarted}
       />
       <canvas
         onMouseDown={startDrawing}

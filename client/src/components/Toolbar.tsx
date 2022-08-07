@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { theme } from '../styles/theme';
 import { Mode } from '../types/mode';
 
-export const TOOLBAR_WIDTH = 200;
+export const TOOLBAR_WIDTH = 260;
 
 const Container = styled.menu`
   background-color: ${theme.coolGray100};
@@ -35,6 +35,22 @@ const RadioButton = styled.div`
   }
 `;
 
+const CheckboxContainer = styled.div`
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  input {
+    margin-right: 10px;
+  }
+`;
+
+const Button = styled.button`
+  display: block;
+  margin: 10px 0 20px;
+  width: 100%;
+  cursor: pointer;
+`;
+
 interface ToolbarProps {
   color: string;
   setColor: (color: string) => void;
@@ -43,7 +59,11 @@ interface ToolbarProps {
   mode: Mode;
   setMode: (mode: Mode) => void;
   clearCanvas: () => void;
-  timeStarted: string | null;
+  timeStarted: number | null;
+  isPrivate: boolean;
+  setPrivate: any;
+  onSave: () => void;
+  hasDrawing: boolean;
 }
 
 const Toolbar: FunctionComponent<ToolbarProps> = ({
@@ -54,7 +74,11 @@ const Toolbar: FunctionComponent<ToolbarProps> = ({
   mode,
   setMode,
   clearCanvas,
-  timeStarted
+  timeStarted,
+  isPrivate,
+  setPrivate,
+  onSave,
+  hasDrawing
 }) => (
   <Container>
     <div>
@@ -99,12 +123,27 @@ const Toolbar: FunctionComponent<ToolbarProps> = ({
           </RadioButton>
         ))}
       </FieldContainer>
-      <button onClick={clearCanvas}>Clear canvas</button>
+      <CheckboxContainer>
+        <input
+          type="checkbox"
+          id="private"
+          checked={isPrivate}
+          onChange={() => setPrivate(!isPrivate)}
+        />
+        <label htmlFor="private">Make Private?</label>
+      </CheckboxContainer>
+
+      <Button onClick={clearCanvas} disabled={!hasDrawing}>
+        Clear canvas
+      </Button>
+      <Button onClick={onSave} disabled={!hasDrawing}>
+        Submit
+      </Button>
     </div>
     {timeStarted && (
       <div>
         <strong>Started drawing at: </strong>
-        <span>{timeStarted}</span>
+        <span>{new Date(timeStarted).toLocaleString()}</span>
       </div>
     )}
   </Container>
