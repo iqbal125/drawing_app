@@ -4,27 +4,29 @@ import Create from './pages/create';
 import Auth from './pages/auth';
 import Main from './pages/main';
 import silentAuth from './utils/silentAuth';
-import { authReducer, initialStateAuth } from './store/reducers/auth_reducer';
-import { Login, Logout } from './store/actions/actions';
+import { authReducer, initialStateAuth } from './store/reducers/authReducer';
+import { loginAction, logoutAction } from './store/actions/actions';
 import AuthContext from './utils/authContext';
+import { User } from './types/user';
+import 'antd/dist/antd.css';
 
 const App = () => {
   const [authState, dispatchAuth] = useReducer(authReducer, initialStateAuth);
 
+  const login = (user: User) => {
+    dispatchAuth(loginAction(user));
+  };
+
+  const logout = () => {
+    dispatchAuth(logoutAction());
+  };
+
   useEffect(() => {
-    silentAuth(LogIn, LogOut);
+    silentAuth(login, logout);
   }, []);
 
-  const LogIn = (user) => {
-    dispatchAuth(Login(user));
-  };
-
-  const LogOut = () => {
-    dispatchAuth(Logout);
-  };
-
   return (
-    <AuthContext.Provider value={{ LogIn, LogOut, authState }}>
+    <AuthContext.Provider value={{ login, logout, authState }}>
       <BrowserRouter>
         <Routes>
           <Route path="/">

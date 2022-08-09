@@ -1,11 +1,17 @@
 import { MouseEvent, useEffect, useRef, useState, useContext } from 'react';
+import axios from '../utils/axios';
 import { theme } from '../styles/theme';
 import { Mode } from '../types/mode';
-
-import AuthContext from '../utils/authContext';
+import AuthContext, { AuthContextType } from '../utils/authContext';
+import errorNotification from '../utils/errorNotification';
+import successNotification from '../utils/successNotification';
 
 const useCanvas = () => {
-  const { authState } = useContext(AuthContext);
+  const {
+    authState: {
+      user: { username, id, token }
+    }
+  } = useContext(AuthContext) as AuthContextType;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -86,7 +92,7 @@ const useCanvas = () => {
     setTimeStarted(null);
   };
 
-  const saveDrawing = () => {
+  const saveDrawing = async () => {
     if (!timeStarted) {
       return;
     }
@@ -96,21 +102,33 @@ const useCanvas = () => {
     const dataURL = canvas?.toDataURL();
     const timeEnded = new Date().getTime();
 
-    const timeToComplete = timeEnded - timeStarted;
+    const submitedTime = new Date().toISOString();
+    const timeToComplete = new Date((timeEnded - timeStarted) * 1000).getMinutes();
 
-    const date = new Date(timeToComplete * 1000);
-    const minutesToComplete = date.getMinutes();
-    const author = authState.user.username;
-    const user_id = authState.user.user_id;
-    const token = authState.user.token;
-
-    console.log(authState.user.username);
     let data = {
       dataURL,
       timeToComplete,
-      timeStarted: timeStarted
-      //user data
+      submitedTime,
+      author: username,
+      user_id: id,
+      isPrivate
     };
+
+    //const headers = token;
+
+    await axios
+      .post('/api/drawing', data)
+      .then(() => successNotification('Drawing successfully saved'))
+      .catch(errorNotification);
+  };
+
+  const deleteDrawing = async (drawing_id: number) => {
+    let headers;
+    let params = { drawing_id };
+    await axios
+      .delete(`/api/drawing`, { params })
+      .then(() => successNotification('Drawing successfully deleted'))
+      .catch(errorNotification);
   };
 
   return {
@@ -129,7 +147,8 @@ const useCanvas = () => {
     timeStarted: timeStarted,
     isPrivate,
     setPrivate,
-    saveDrawing
+    saveDrawing,
+    deleteDrawing
   };
 };
 

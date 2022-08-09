@@ -1,40 +1,48 @@
-import { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
+import jwt_decode from 'jwt-decode';
+import AuthContext, { AuthContextType } from '../utils/authContext';
+import axios from '../utils/axios';
 import AuthLayout from './AuthLayout';
 import Form from './Form';
 import Field from './Field';
-import jwt_decode from 'jwt-decode';
-import AuthContext from '../utils/authContext';
-import axios from '../utils/axios';
+import LinkButton from './LinkButton';
+import { useNavigate } from 'react-router-dom';
+import errorNotification from '../utils/errorNotification';
 
-export interface LoginProps {
-  setIsSignIn: any;
+interface FormElements extends HTMLFormControlsCollection {
+  email: HTMLInputElement;
+  password: HTMLInputElement;
 }
 
-const Login: FunctionComponent<LoginProps> = ({ setIsSignIn }: any) => {
-  const { authState, LogIn, LogOut } = useContext(AuthContext);
+interface FormElement extends HTMLFormElement {
+  readonly elements: FormElements;
+}
 
-  const login = async (e: any) => {
+interface LoginProps {
+  setIsSignIn: (isSignIn: boolean) => void;
+}
+
+const Login: FunctionComponent<LoginProps> = ({ setIsSignIn }) => {
+  let navigate = useNavigate();
+  const { login } = useContext(AuthContext) as AuthContextType;
+
+  const handleFormSubmit = async (e: React.FormEvent<FormElement>) => {
     e.preventDefault();
 
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    const email = e.currentTarget.elements.email.value;
+    const password = e.currentTarget.elements.password.value;
 
     const data = {
       email,
       password
     };
 
-    console.log(e, email);
-
-    const response: any = await axios.post('/auth/login', data).catch((err) => console.log(err));
-    console.log(response);
+    const response: any = await axios.post('/auth/login', data).catch(errorNotification);
 
     const token: any = response.data.token;
     const decoded_token: any = jwt_decode(response.data.token);
     const id = decoded_token.user.user_id;
     const username = decoded_token.user.username;
-
-    console.log(id);
 
     // example login response
     //let user = {
@@ -52,19 +60,22 @@ const Login: FunctionComponent<LoginProps> = ({ setIsSignIn }: any) => {
       token
     };
 
-    LogIn(user);
+    login(user);
 
-    //TODO: redirect to main, and add AntD error notification
+    if (response.status === 200) {
+      navigate('/');
+    }
   };
 
   return (
     <AuthLayout headingLabel="Please log in">
-      <Form onSubmit={login}>
+      <Form onSubmit={handleFormSubmit}>
         <Field id="email" type="email" label="Email address" />
         <Field id="password" type="password" label="Password" />
         <button type="submit">Submit</button>
       </Form>
-      <div onClick={() => setIsSignIn(false)}>Dont have an Account? Click here to register </div>
+      <span>Dont have an account?</span>
+      <LinkButton onClick={() => setIsSignIn(false)}>Register</LinkButton>
     </AuthLayout>
   );
 };

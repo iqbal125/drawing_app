@@ -1,13 +1,15 @@
-const silentAuth = (LogIn, LogOut) => {
-  let user, expiresAt;
+import { User } from '../types/user';
+import { LocalStorageKeys } from './constants';
+import getFromLocalStorage from './getFromLocalStorage';
 
-  user = JSON.parse(localStorage.getItem('user'));
-  expiresAt = JSON.parse(localStorage.getItem('expiresIn'));
+const silentAuth = (login: (user: User) => void, logout: () => void) => {
+  const user = getFromLocalStorage(LocalStorageKeys.USER);
+  const expiresAt = getFromLocalStorage(LocalStorageKeys.EXPIRES_IN);
 
   if (user && new Date().getTime() < expiresAt) {
-    LogIn(user);
+    login(user);
   } else if (!user || new Date().getTime() > expiresAt) {
-    LogOut();
+    logout();
   }
 };
 
