@@ -1,7 +1,13 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Drawing, { DrawingType } from '../components/Drawing';
 import { theme } from '../styles/theme';
+import AuthContext, { AuthContextType } from '../utils/authContext';
+import { DataArr } from './DummyData';
+import axios from '../utils/axios';
+import NavBar from '../components/NavBar';
+import errorNotification from '../utils/errorNotification';
+import useCanvas from '../hooks/useCanvas';
 
 const Container = styled.div`
   background-color: ${theme.coolGray100};
@@ -20,115 +26,36 @@ const Heading = styled.h1`
 `;
 
 const Main: FunctionComponent = () => {
-  const userFirstName = 'Moe';
-  const drawings: DrawingType[] = [
-    {
-      user: 'Ioanna',
-      creationTimestamp: 1659860014627,
-      drawingDuration: 8731,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659265982205-274fb6be906d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1011&q=80',
-      canDelete: false
-    },
-    {
-      user: 'Moe',
-      creationTimestamp: 1659860013627,
-      drawingDuration: 10000,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659531971776-4c66aa4fdacb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80',
-      canDelete: true
-    },
-    {
-      user: 'Ioanna',
-      creationTimestamp: 1659860014627,
-      drawingDuration: 8731,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659265982205-274fb6be906d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1011&q=80',
-      canDelete: false
-    },
-    {
-      user: 'Moe',
-      creationTimestamp: 1659860013627,
-      drawingDuration: 10000,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659531971776-4c66aa4fdacb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80',
-      canDelete: true
-    },
-    {
-      user: 'Ioanna',
-      creationTimestamp: 1659860014627,
-      drawingDuration: 8731,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659265982205-274fb6be906d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1011&q=80',
-      canDelete: false
-    },
-    {
-      user: 'Moe',
-      creationTimestamp: 1659860013627,
-      drawingDuration: 10000,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659531971776-4c66aa4fdacb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80',
-      canDelete: true
-    },
-    {
-      user: 'Ioanna',
-      creationTimestamp: 1659860014627,
-      drawingDuration: 8731,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659265982205-274fb6be906d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1011&q=80',
-      canDelete: false
-    },
-    {
-      user: 'Moe',
-      creationTimestamp: 1659860013627,
-      drawingDuration: 10000,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659531971776-4c66aa4fdacb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80',
-      canDelete: true
-    },
-    {
-      user: 'Ioanna',
-      creationTimestamp: 1659860014627,
-      drawingDuration: 8731,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659265982205-274fb6be906d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1011&q=80',
-      canDelete: false
-    },
-    {
-      user: 'Moe',
-      creationTimestamp: 1659860013627,
-      drawingDuration: 10000,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659531971776-4c66aa4fdacb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80',
-      canDelete: true
-    },
-    {
-      user: 'Ioanna',
-      creationTimestamp: 1659860014627,
-      drawingDuration: 8731,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659265982205-274fb6be906d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1011&q=80',
-      canDelete: false
-    },
-    {
-      user: 'Moe',
-      creationTimestamp: 1659860013627,
-      drawingDuration: 10000,
-      thumbnail:
-        'https://images.unsplash.com/photo-1659531971776-4c66aa4fdacb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80',
-      canDelete: true
-    }
-  ];
-  return (
-    <Container>
-      <NarrowContainer>
-        <Heading>Welcome back, {userFirstName}</Heading>
+  const { deleteDrawing } = useCanvas();
+  const [drawings, setDrawings] = useState([]);
 
-        {drawings.map((drawing) => (
-          <Drawing drawing={drawing} key={drawing.thumbnail} />
-        ))}
-      </NarrowContainer>
-    </Container>
+  const getDrawings = async () => {
+    const response = await axios.get('/api/drawings').catch(errorNotification);
+    setDrawings(response?.data);
+  };
+
+  useEffect(() => {
+    getDrawings();
+  }, []);
+
+  return (
+    <>
+      <NavBar />
+      <Container>
+        <NarrowContainer>
+          <Heading>Welcome back</Heading>
+          {DataArr.map((drawing) => (
+            <Drawing
+              key={drawing.id}
+              drawing={drawing}
+              onDelete={() => {
+                deleteDrawing(drawing.id);
+              }}
+            />
+          ))}
+        </NarrowContainer>
+      </Container>
+    </>
   );
 };
 

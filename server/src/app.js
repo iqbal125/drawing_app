@@ -12,6 +12,7 @@ import {errorHandler} from "./Middleware/errorHandler.js"
 import {unhandledRejectionHandler} from "./Middleware/unhandledRejectionHandler.js"
 
 import auth from "./API/auth.js"
+import drawing from "./API/drawing.js"
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
 app.use("/auth", auth)
+app.use("/api", drawing)
 
 // error handling
 app.use(errorHandler)

@@ -61,7 +61,7 @@ interface ToolbarProps {
   clearCanvas: () => void;
   timeStarted: number | null;
   isPrivate: boolean;
-  setPrivate: any;
+  setPrivate: (isPrivate: boolean) => void;
   onSave: () => void;
   hasDrawing: boolean;
 }

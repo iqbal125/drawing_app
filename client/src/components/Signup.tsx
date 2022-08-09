@@ -1,38 +1,61 @@
 import { FunctionComponent, useContext } from 'react';
-import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
+import axios from '../utils/axios';
+import AuthContext, { AuthContextType } from '../utils/authContext';
+import errorNotification from '../utils/errorNotification';
 import AuthLayout from './AuthLayout';
 import Field from './Field';
 import Form from './Form';
-import AuthContext from '../utils/authContext';
-import axios from '../utils/axios';
 
-export interface SignUpProps {
-  setIsSignIn: any;
+import LinkButton from './LinkButton';
+
+interface FormElements extends HTMLFormControlsCollection {
+  email: HTMLInputElement;
+  name: HTMLInputElement;
+  password: HTMLInputElement;
 }
 
-const Signup: FunctionComponent<SignUpProps> = ({ setIsSignIn }: any) => {
-  const { authState, LogIn, LogOut } = useContext(AuthContext);
+interface FormElement extends HTMLFormElement {
+  readonly elements: FormElements;
+}
 
-  console.log(authState);
+interface SignUpProps {
+  setIsSignIn: (isSignIn: boolean) => void;
+}
 
-  const signup = async (e: any) => {
+const Signup: FunctionComponent<SignUpProps> = ({ setIsSignIn }) => {
+  let navigate = useNavigate();
+  const { login } = useContext(AuthContext) as AuthContextType;
+
+  const signup = async (e: React.FormEvent<FormElement>) => {
     e.preventDefault();
-
-    const email = e.target.email.value;
-    const username = e.target.name.value;
-    const password = e.target.password.value;
-
+    const { email, name, password } = e.currentTarget.elements;
     const data = {
-      email,
-      username,
-      password
+      email: email.value,
+      username: name.value,
+      password: password.value
     };
 
-    console.log(e, email);
+    const response = await axios.post('/auth/signup', data).catch(errorNotification);
 
-    const response = await axios.post('/auth/signup', data).catch((err) => console.log(err));
-    console.log(response);
-    //TODO: redirect to main, and add AntD error notification
+    const token = response.data.token;
+    const decoded_token: any = jwt_decode(response.data.token);
+    const id = decoded_token.user.user_id;
+    const username = e.currentTarget.elements.name.value;
+
+    let user = {
+      id,
+      email,
+      username,
+      token
+    };
+
+    login(user);
+
+    if (response.status === 200) {
+      navigate('/');
+    }
   };
 
   return (
@@ -42,8 +65,9 @@ const Signup: FunctionComponent<SignUpProps> = ({ setIsSignIn }: any) => {
         <Field id="name" type="name" label="Full name" />
         <Field id="password" type="password" label="Password" />
         <button type="submit">Submit</button>
-        <div onClick={() => setIsSignIn(true)}>Already Have an Account, Click here to Login </div>
       </Form>
+      <span>Already have an account?</span>
+      <LinkButton onClick={() => setIsSignIn(true)}>Login</LinkButton>
     </AuthLayout>
   );
 };
