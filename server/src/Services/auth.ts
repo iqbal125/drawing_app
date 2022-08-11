@@ -1,18 +1,19 @@
-import {setToken} from "../Middleware/auth.js"
-import {saveUsertoDB, getUser} from "../Model/auth.js"
+import {Request, Response} from "express"
+import {setToken} from "../Middleware/auth"
+import {saveUsertoDB, getUser} from "../Model/auth"
 import bcrypt from "bcrypt"
 
-const hashPassword = async (plainTextPass) => {
+const hashPassword = async (plainTextPass: string) => {
   const hash = await bcrypt.hash(plainTextPass, 10)
   return hash
 }
 
-async function comparePassword(plaintextPassword, hash) {
+async function comparePassword(plaintextPassword: string, hash: string) {
   const result = await bcrypt.compare(plaintextPassword, hash)
   return result
 }
 
-export const SignUp = async (req, res) => {
+export const SignUp = async (req: Request, res: Response) => {
   const username = req.body.username
   const email = req.body.email
   const password = req.body.password
@@ -35,7 +36,7 @@ export const SignUp = async (req, res) => {
   res.send({token: setToken(user_id)})
 }
 
-export const Login = async (req, res) => {
+export const Login = async (req: Request, res: Response) => {
   let email = req.body.email
   const password = req.body.password
 

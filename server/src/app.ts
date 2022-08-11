@@ -1,22 +1,22 @@
 import express from "express"
 
-//initialize 3rd party libraries
-import "./Config/dotenv.js"
-import "./Database/db.js"
+// initialize 3rd party libraries
+import "./Config/dotenv"
+import "./Database/db"
 
 import cors from "cors"
 import morgan from "morgan"
 
-import limiter from "./Middleware/rateLimiter.js"
-import {errorHandler} from "./Middleware/errorHandler.js"
-import {unhandledRejectionHandler} from "./Middleware/unhandledRejectionHandler.js"
+import limiter from "./Middleware/rateLimiter"
+import {errorHandler} from "./Middleware/errorHandler"
+import {unhandledRejectionHandler} from "./Middleware/unhandledRejectionHandler"
 
-import auth from "./API/auth.js"
-import drawing from "./API/drawing.js"
+import auth from "./API/auth"
+import drawing from "./API/drawing"
 
 const app = express()
 
-//Middleware
+// Middleware
 app.use(cors())
 app.use(limiter)
 app.use(morgan("dev"))

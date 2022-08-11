@@ -9,6 +9,7 @@ import { loginAction, logoutAction } from './store/actions/actions';
 import AuthContext from './utils/authContext';
 import { User } from './types/user';
 import 'antd/dist/antd.css';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   const [authState, dispatchAuth] = useReducer(authReducer, initialStateAuth);
@@ -32,7 +33,14 @@ const App = () => {
           <Route path="/">
             <Route index element={<Main />} />
             <Route path="login" element={<Auth />} />
-            <Route path="create" element={<Create />} />
+            <Route
+              path="create"
+              element={
+                <ProtectedRoute>
+                  <Create />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -3,9 +3,16 @@ import styled from 'styled-components';
 import NavBar, { NAV_BAR_HEIGHT } from '../components/NavBar';
 import Toolbar, { TOOLBAR_WIDTH } from '../components/Toolbar';
 import useCanvas from '../hooks/useCanvas';
+import { theme } from '../styles/theme';
+
+const CANVAS_BORDER_WIDTH = 1;
 
 const Container = styled.div`
   display: flex;
+`;
+
+const Canvas = styled.canvas`
+  border: ${CANVAS_BORDER_WIDTH}px solid ${theme.coolGray500};
 `;
 
 const Create: FunctionComponent = () => {
@@ -46,13 +53,13 @@ const Create: FunctionComponent = () => {
           onSave={saveDrawing}
           hasDrawing={!!timeStarted}
         />
-        <canvas
+        <Canvas
           onMouseDown={startDrawing}
           onMouseUp={endDrawing}
           onMouseMove={draw}
           ref={canvasRef}
           width={initialWindowSize.current.width - TOOLBAR_WIDTH}
-          height={initialWindowSize.current.height - NAV_BAR_HEIGHT}
+          height={initialWindowSize.current.height - NAV_BAR_HEIGHT - 2 * CANVAS_BORDER_WIDTH}
         />
       </Container>
     </>

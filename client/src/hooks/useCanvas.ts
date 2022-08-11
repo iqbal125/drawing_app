@@ -114,21 +114,14 @@ const useCanvas = () => {
       isPrivate
     };
 
-    //const headers = token;
+    const headers = { Authorization: `Bearer ${token}` };
 
     await axios
-      .post('/api/drawing', data)
+      .post('/api/drawing', data, { headers })
       .then(() => successNotification('Drawing successfully saved'))
       .catch(errorNotification);
-  };
 
-  const deleteDrawing = async (drawing_id: number) => {
-    let headers;
-    let params = { drawing_id };
-    await axios
-      .delete(`/api/drawing`, { params })
-      .then(() => successNotification('Drawing successfully deleted'))
-      .catch(errorNotification);
+    clearCanvas();
   };
 
   return {
@@ -147,8 +140,7 @@ const useCanvas = () => {
     timeStarted: timeStarted,
     isPrivate,
     setPrivate,
-    saveDrawing,
-    deleteDrawing
+    saveDrawing
   };
 };
 
