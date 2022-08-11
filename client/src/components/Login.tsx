@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import AuthContext, { AuthContextType } from '../utils/authContext';
 import axios from '../utils/axios';
+import errorNotification from '../utils/errorNotification';
 import AuthLayout from './AuthLayout';
 import Form from './Form';
 import Field from './Field';
 import LinkButton from './LinkButton';
-import { useNavigate } from 'react-router-dom';
-import errorNotification from '../utils/errorNotification';
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -39,8 +39,8 @@ const Login: FunctionComponent<LoginProps> = ({ setIsSignIn }) => {
 
     const response: any = await axios.post('/auth/login', data).catch(errorNotification);
 
-    const token: any = response.data.token;
-    const decoded_token: any = jwt_decode(response.data.token);
+    const token: any = response?.data?.token;
+    const decoded_token: any = jwt_decode(response?.data?.token);
     const id = decoded_token.user.user_id;
     const username = decoded_token.user.username;
 
@@ -74,7 +74,7 @@ const Login: FunctionComponent<LoginProps> = ({ setIsSignIn }) => {
         <Field id="password" type="password" label="Password" />
         <button type="submit">Submit</button>
       </Form>
-      <span>Dont have an account?</span>
+      <span>Don't have an account?</span>
       <LinkButton onClick={() => setIsSignIn(false)}>Register</LinkButton>
     </AuthLayout>
   );

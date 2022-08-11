@@ -11,7 +11,6 @@ const Container = styled.menu`
   padding: 20px;
   margin: 0;
   width: ${TOOLBAR_WIDTH}px;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import Drawing, { DrawingType } from '../components/Drawing';
 import { theme } from '../styles/theme';
 import AuthContext, { AuthContextType } from '../utils/authContext';
-import { DataArr } from './DummyData';
 import axios from '../utils/axios';
 import NavBar from '../components/NavBar';
 import errorNotification from '../utils/errorNotification';
-import useCanvas from '../hooks/useCanvas';
+import successNotification from '../utils/successNotification';
 
 const Container = styled.div`
   background-color: ${theme.coolGray100};
@@ -26,12 +25,38 @@ const Heading = styled.h1`
 `;
 
 const Main: FunctionComponent = () => {
-  const { deleteDrawing } = useCanvas();
-  const [drawings, setDrawings] = useState([]);
+  const {
+    authState: {
+      user: { token }
+    }
+  } = useContext(AuthContext) as AuthContextType;
+
+  const [drawings, setDrawings] = useState<DrawingType[]>([]);
 
   const getDrawings = async () => {
     const response = await axios.get('/api/drawings').catch(errorNotification);
-    setDrawings(response?.data);
+    if (response) {
+      setDrawings(response?.data);
+    }
+  };
+
+  const deleteDrawing = async (drawing_id: number) => {
+    const headers = { Authorization: `Bearer ${token}` };
+    const params = { drawing_id };
+
+    const response: any = await axios
+      .delete(`/api/drawing`, { params, headers })
+      .catch(errorNotification);
+
+    if (response.status !== 200) {
+      return;
+    } else {
+      successNotification('Drawing successfully deleted');
+    }
+
+    let newArr = [...drawings];
+    newArr = newArr.filter((item) => item.id !== drawing_id);
+    setDrawings(newArr);
   };
 
   useEffect(() => {
@@ -44,7 +69,7 @@ const Main: FunctionComponent = () => {
       <Container>
         <NarrowContainer>
           <Heading>Welcome back</Heading>
-          {DataArr.map((drawing) => (
+          {drawings.map((drawing) => (
             <Drawing
               key={drawing.id}
               drawing={drawing}

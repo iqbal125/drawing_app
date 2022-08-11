@@ -31,22 +31,23 @@ const Signup: FunctionComponent<SignUpProps> = ({ setIsSignIn }) => {
   const signup = async (e: React.FormEvent<FormElement>) => {
     e.preventDefault();
     const { email, name, password } = e.currentTarget.elements;
+    const username = name.value;
+
     const data = {
       email: email.value,
-      username: name.value,
+      username,
       password: password.value
     };
 
-    const response = await axios.post('/auth/signup', data).catch(errorNotification);
+    const response: any = await axios.post('/auth/signup', data).catch(errorNotification);
 
-    const token = response.data.token;
+    const token: any = response.data.token;
     const decoded_token: any = jwt_decode(response.data.token);
-    const id = decoded_token.user.user_id;
-    const username = e.currentTarget.elements.name.value;
+    const id = decoded_token.user;
 
     let user = {
       id,
-      email,
+      email: email.value,
       username,
       token
     };

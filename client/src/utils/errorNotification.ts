@@ -1,24 +1,18 @@
 import { notification } from 'antd';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 const errorNotification = (error: Error | AxiosError) => {
-  let errorTitle = 'Error Detected';
-  let errorDescription = 'There was an error, please contact support or try again';
+  const { response } = error as AxiosError;
+  const { data } = response as any;
+  const { type, message } = data || {};
 
-  if (axios.isAxiosError(error)) {
-    const { name, message } = error as AxiosError;
-    if (name) {
-      errorTitle = name;
-    }
-    if (message) {
-      errorDescription = message;
-    }
-  }
+  let errorTitle = type || 'Error Detected';
+  let errorDescription = message || 'There was an error, please contact support or try again';
 
   notification.error({
     message: errorTitle,
     description: errorDescription,
-    duration: 10
+    duration: 5
   });
 };
 

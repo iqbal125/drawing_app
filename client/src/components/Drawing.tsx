@@ -46,6 +46,8 @@ const Drawing: FunctionComponent<DrawingProps> = ({
   onDelete
 }) => {
   const { authState } = useContext(AuthContext) as AuthContextType;
+  console.log(authState);
+
   return (
     <Container>
       {!isprivate && (

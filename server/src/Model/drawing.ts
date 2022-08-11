@@ -1,6 +1,6 @@
-import db from "../Database/db.js"
+import db from "../Database/db"
 
-export const postDrawingModel = async (dataURL, user_id, author, isPrivate, timeToDraw, dateCompleted) => {
+export const postDrawingModel = async (dataURL:string, user_id:string | number, author:string, isPrivate:boolean, timeToDraw:string | number, dateCompleted:Date | string) => {
   let text = `INSERT INTO drawings(dataURL, user_id, author, isPrivate, timeToDraw, dateCompleted)
               VALUES ($1, $2, $3, $4, $5, $6)`
 
@@ -19,7 +19,7 @@ export const getDrawingsModel = async () => {
   return queryResult.rows
 }
 
-export const deleteDrawingModel = async (drawing_id) => {
+export const deleteDrawingModel = async (drawing_id:string) => {
   let text = `DELETE FROM drawings
               WHERE id=$1`
   let values = [drawing_id]

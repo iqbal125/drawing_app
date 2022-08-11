@@ -1,6 +1,7 @@
+import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 
-export const requireAuth = (req, res, next) => {
+export const requireAuth = (req:Request, res:Response, next:NextFunction) => {
   const authHeader = req.headers.authorization
 
   // token validation
@@ -14,7 +15,7 @@ export const requireAuth = (req, res, next) => {
   }
 }
 
-export const setToken = (user) => {
+export const setToken = (user:string | object | Buffer) => {
   let opts = {
     expiresIn: "7d",
   }
