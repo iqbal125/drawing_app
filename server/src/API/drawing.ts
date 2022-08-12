@@ -6,10 +6,7 @@ import {requireAuth} from "../Middleware/auth"
 import {postDrawing, getDrawings, deleteDrawing} from "../Services/drawing"
 
 router.get("/drawings", asyncHandler(getDrawings))
-//router.post("/drawing", requireAuth, asyncHandler(postDrawing))
-//router.delete("/drawing", requireAuth, asyncHandler(deleteDrawing))
-
-router.post("/drawing", asyncHandler(postDrawing))
-router.delete("/drawing", asyncHandler(deleteDrawing))
+router.post("/drawing", requireAuth, asyncHandler(postDrawing))
+router.delete("/drawing", requireAuth, asyncHandler(deleteDrawing))
 
 export default router

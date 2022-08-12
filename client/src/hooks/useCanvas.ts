@@ -103,7 +103,12 @@ const useCanvas = () => {
     const timeEnded = new Date().getTime();
 
     const submitedTime = new Date().toISOString();
-    const timeToComplete = new Date((timeEnded - timeStarted) * 1000).getMinutes();
+    const timeToComplete = new Date(timeEnded - timeStarted).getSeconds();
+
+    const timeStratDate = new Date(timeStarted);
+    const timeEndDate = new Date(timeEnded);
+
+    console.log(timeStratDate, timeEndDate, timeToComplete);
 
     let data = {
       dataURL,
@@ -121,6 +126,7 @@ const useCanvas = () => {
       .then(() => successNotification('Drawing successfully saved'))
       .catch(errorNotification);
 
+    setTimeStarted(null);
     clearCanvas();
   };
 

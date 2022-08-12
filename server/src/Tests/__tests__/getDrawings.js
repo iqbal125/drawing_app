@@ -38,35 +38,13 @@ afterEach(() => {
   clearDb()
 })
 
-describe("DELETE API drawings  /api/drawing", () => {
-  it("delete drawing with id", async () => {
-    const user = await createUser("test3www", "teswww33@yahoo.com", "password")
+describe("GET drawings /api/drawings", () => {
+  it("get drawings", async () => {
+    const user = await createUser("test333", "test133ss@yahoo.com", "password")
 
-    let drawing = await createDrawing("dshfd446443-095t8i", user.id, "test_user", false, 33, "2022-08-11T15:43:27.190Z")
+    await createDrawing("dshfd446443-095t8i", user.id, "test_user", false, 33, "2022-08-11T15:43:27.190Z")
 
-    let res = await request.delete("/api/drawing").query({
-      drawing_id: drawing.id,
-    })
-
-    expect(res.status).toEqual(200)
-  })
-})
-
-describe("POST API drawings", () => {
-  it("create new drawing", async () => {
-    const user = await createUser("test333", "tes3333@yahoo.com", "password")
-    const exampleToken =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZTU3MDQwYjAtMDUzNy00YzgzLWI3N2UtN2U2MjUyZjEzMjg1IiwiaWF0IjoxNjYwMTgxNDAyLCJleHAiOjE2NjA3ODYyMDJ9.Ukb10HXrHNHaHOcMu2RXdBz4VNbPVmKqvewdSldVz8I"
-
-    let res = await request.post("/api/drawing").send({
-      dataURL: "LKdghrghndo;lhgljfdgklaghdfhl;k",
-      user_id: user.id,
-      isPrivate: false,
-      timeToComplete: 55,
-      submitedTime: "2022-08-11T15:43:27.190Z",
-      author: "test333",
-    })
-
+    let res = await request.get(`/api/drawings`)
     expect(res.status).toEqual(200)
   })
 })
