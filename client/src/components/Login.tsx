@@ -50,7 +50,7 @@ const Login: FunctionComponent<LoginProps> = ({ setIsSignIn }) => {
     //  email: 'test123@yahoo.com',
     //  username: 'test',
     //  token:
-    //    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfaWQiOiI5MWIzZDg1OC04YTQ5LTRlZmYtYTE3ZC05YTVkY2Q3NWQxZmYiLCJ1c2VybmFtZSI6InRlc3QifSwiaWF0IjoxNjU5ODk1NzU4LCJleHAiOjE2NjA1MDA1NTh9.KfCkOWtm_WTHRxt__7SwzjwKji600gd4P2HzjcpQQ9g'
+    //    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
     //};
 
     let user = {
