@@ -46,7 +46,6 @@ const Drawing: FunctionComponent<DrawingProps> = ({
   onDelete
 }) => {
   const { authState } = useContext(AuthContext) as AuthContextType;
-  console.log(authState);
 
   return (
     <Container>
@@ -55,7 +54,7 @@ const Drawing: FunctionComponent<DrawingProps> = ({
           <Image src={dataurl} alt={`Drawing with id ${id} by user ${user_id}`} />
           <FieldsContainer>
             <Field>
-              <strong>Drawing duration:</strong> {new Date(timetodraw).getTime()} minutes
+              <strong>Drawing duration:</strong> {new Date(timetodraw).getTime()} Seconds
             </Field>
             <Field>
               <strong>Created at:</strong> {new Date(datecompleted).toLocaleString()}

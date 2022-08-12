@@ -40,7 +40,6 @@ const SignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let hashedPass = yield hashPassword(password);
     //save user info to our own db, and get unique user database id
     let result = yield (0, auth_2.saveUsertoDB)(email, username, hashedPass);
-    console.log(result);
     let user_id = result.id;
     res.send({ token: (0, auth_1.setToken)(user_id) });
 });
